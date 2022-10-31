@@ -41,13 +41,20 @@ export default function App() {
   return View(
     List(ALBUM.songs, (song, i) =>
       HStack(
-        Image(ALBUM.cover).alt("Cover art for " + ALBUM.title),
+        { alignment: "center" },
+        Image(ALBUM.cover)
+          .alt("Cover art for " + ALBUM.title)
+          .cornerRadius(30),
         VStack(
-          { alignment: "leading" },
+          { alignment: "leading", spacing: 5 },
           Text(song.title),
-          Text(ALBUM.artist.name).foregroundStyle("secondary")
+          Text(ALBUM.artist.name).foregroundStyle("secondary"),
+          Text(song.duration)
+            .foregroundStyle("secondary")
+            .style({ color: "blue" })
         )
       )
+        .padding()
         .onPointerDown(() => setTapped(i))
         .onPointerUp(() => setTapped(-1))
         .style({
@@ -73,8 +80,8 @@ function List<T>(
 }
 
 interface HStackProps {
-  alignment: "top" | "center" | "bottom";
-  spacing: number;
+  alignment?: "top" | "center" | "bottom";
+  spacing?: number;
 }
 function HStack(
   propsOrFirstItem: HStackProps | BuilderFunction,
@@ -88,8 +95,8 @@ function HStack(
   return ProxyBuilder("div", undefined, ...allChildren).style({
     display: "flex",
     flex: "1",
-    ...(props && {
-      justifyItems:
+    ...(props?.alignment && {
+      alignItems:
         props.alignment === "top"
           ? "start"
           : props.alignment === "bottom"
